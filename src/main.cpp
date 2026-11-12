@@ -6,7 +6,7 @@
 #define SHT31_ADDRESS 0x44      
 #define SCL_PIN 22
 #define SDA_PIN 21
-#define MQ2_PIN 34
+#define MQ2_PIN 36
 
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 
