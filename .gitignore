@@ -3,4 +3,16 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+#Python
+.venv/
+_pycache_/
+
+#Database generated files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+#Credentials
+backend/.env
 /include/mqtt_define.h
