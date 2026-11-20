@@ -12,6 +12,7 @@
 #define MQ2_PIN 36
 
 #define MQTT_TOPIC "firescout/nodes/node01/telemetry"
+#define MQTT_STATUS_TOPIC "firescout/nodes/node1/status"
 
 Adafruit_SHT31 sht31 = Adafruit_SHT31();
 WiFiClient network;
@@ -48,6 +49,12 @@ void maintainMQTT() {
         MQTT_USER,
         MQTT_PASSWORD
       );
+      mqtt.publish(
+        MQTT_STATUS_TOPIC,
+        "online",
+        true,
+        1
+      );
     } else {
       connected = mqtt.connect("firescout-node-01");
     }
@@ -76,6 +83,12 @@ void setup() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
   mqtt.begin(MQTT_HOST, MQTT_PORT, network);
+  mqtt.setWill(
+    MQTT_STATUS_TOPIC,
+    "offline",
+    true,
+    1
+  );
 }
 
 void loop() {

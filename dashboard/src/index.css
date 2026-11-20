@@ -1,0 +1,187 @@
+
+:root {
+  font-family: Inter, Arial, sans-serif;
+  color: #e8edf5;
+  background: #0b1220;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  max-width: 1350px;
+  margin: auto;
+  padding: 30px;
+}
+
+.header,
+.node-heading,
+.node-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header {
+  margin-bottom: 28px;
+}
+
+h1 {
+  margin: 4px 0;
+  font-size: 36px;
+  letter-spacing: 2px;
+}
+
+h2 {
+  font-size: 20px;
+  margin: 0 0 8px;
+}
+
+h3 {
+  font-size: 16px;
+  margin: 0 0 20px;
+}
+
+.eyebrow {
+  color: #38bdf8;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.muted {
+  color: #9baabc;
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.card {
+  background: #151f30;
+  border: 1px solid #273244;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.summary,
+.sensor-grid,
+.charts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.summary,
+.node-selector,
+.sensor-grid {
+  margin-bottom: 20px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric strong {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+select {
+  background: #0b1220;
+  color: white;
+  border: 1px solid #34445b;
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 220px;
+}
+
+.status,
+.refresh {
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.online {
+  background: #123c2d;
+  color: #4ade80;
+}
+
+.offline {
+  background: #49302c;
+  color: #fca5a5;
+}
+
+.refresh {
+  background: #123345;
+  color: #7dd3fc;
+}
+
+.node-heading {
+  margin-bottom: 24px;
+}
+
+.reading-time {
+  margin-top: 14px;
+}
+
+.charts {
+  margin-top: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chart {
+  width: 100%;
+  height: 260px;
+}
+
+.error {
+  padding: 14px;
+  margin-bottom: 16px;
+  background: #49292c;
+  border-radius: 8px;
+  color: #fecaca;
+}
+
+footer {
+  text-align: center;
+  color: #708198;
+  font-size: 12px;
+  padding: 32px 0;
+}
+
+@media (max-width: 800px) {
+  .app {
+    padding: 16px;
+  }
+
+  .header,
+  .node-heading,
+  .node-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .summary,
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  select {
+    width: 100%;
+  }
+}
+
