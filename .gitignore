@@ -16,3 +16,4 @@ data/*.db-wal
 #Credentials
 backend/.env
 /include/mqtt_define.h
+/include/mqtt_define_v2.h

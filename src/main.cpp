@@ -4,7 +4,7 @@
 #include <Adafruit_SHT31.h>
 #include <WiFi.h>
 #include <MQTT.h>
-#include <mqtt_define.h>
+#include <mqtt_define_v2.h>
 
 #define SHT31_ADDRESS 0x44      
 #define SCL_PIN 22
@@ -135,4 +135,3 @@ void loop() {
     }
   }
 }
-
