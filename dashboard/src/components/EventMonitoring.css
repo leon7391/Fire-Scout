@@ -1,0 +1,263 @@
+
+.fs3-monitoring {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.fs3-header,
+.fs3-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fs3-header {
+  margin-bottom: 24px;
+}
+
+.fs3-section-heading {
+  margin: 26px 0 14px;
+}
+
+.fs3-section-heading h3 {
+  margin: 0;
+}
+
+.fs3-section-heading span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.fs3-refresh {
+  color: #4ade80;
+  background: #123c2d;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.fs3-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+
+.fs3-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.fs3-filters select {
+  min-width: 170px;
+  background: #0d1727;
+  color: #e8edf5;
+  border: 1px solid #34445b;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.fs3-export {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 16px;
+  border-radius: 8px;
+  background: #0369a1;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fs3-export:hover {
+  background: #0284c7;
+}
+
+.fs3-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.fs3-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #0d1727;
+  border: 1px solid #34445b;
+  padding: 18px;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.fs3-stat span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.fs3-stat strong {
+  font-size: 24px;
+  color: #e8edf5;
+  overflow-wrap: anywhere;
+}
+
+.fs3-alert-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.fs3-alert {
+  padding: 16px;
+  background: #2b2215;
+  border: 1px solid #8b6b29;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.fs3-alert strong {
+  margin-right: 12px;
+}
+
+.fs3-alert p {
+  font-size: 12px;
+  color: #fcdca0;
+  margin: 10px 0 0;
+}
+
+.fs3-warning-badge,
+.fs3-info-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.fs3-warning-badge {
+  background: #604b1b;
+  color: #fde68a;
+}
+
+.fs3-info-badge {
+  background: #123345;
+  color: #7dd3fc;
+}
+
+.fs3-note {
+  color: #94a3b8;
+  font-size: 12px;
+  margin: 12px 0 20px;
+}
+
+.fs3-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fs3-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.fs3-table th {
+  text-align: left;
+  padding: 14px;
+  background: #0d1727;
+  color: #94a3b8;
+}
+
+.fs3-table td {
+  padding: 14px;
+  border-bottom: 1px solid #34445b;
+  color: #e8edf5;
+  overflow-wrap: anywhere;
+}
+
+.fs3-table tr:hover td {
+  background: #152338;
+}
+
+.fs3-detail-button {
+  padding: 7px 12px;
+  background: #123345;
+  border: 1px solid #256585;
+  border-radius: 7px;
+  color: #7dd3fc;
+  cursor: pointer;
+}
+
+.fs3-detail-button:hover {
+  background: #174663;
+}
+
+.fs3-detail {
+  margin-top: 20px;
+  border: 1px solid #34445b;
+  border-radius: 12px;
+  padding: 18px;
+  background: #0d1727;
+}
+
+.fs3-detail-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+}
+
+.fs3-detail-content p {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.fs3-empty {
+  padding: 20px;
+  text-align: center;
+  color: #94a3b8;
+  background: #0d1727;
+  border-radius: 10px;
+}
+
+.fs3-error {
+  padding: 12px;
+  background: #49292c;
+  border: 1px solid #884747;
+  border-radius: 8px;
+  color: #fecaca;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1000px) {
+  .fs3-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .fs3-stat-grid,
+  .fs3-alert-grid,
+  .fs3-detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .fs3-filters label,
+  .fs3-filters select {
+    width: 100%;
+  }
+
+  .fs3-export {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

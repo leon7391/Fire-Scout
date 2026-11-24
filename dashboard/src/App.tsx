@@ -12,6 +12,7 @@ import {
 } from 'recharts'
 
 import NodeOverview from './components/NodeOverview'
+import EventMonitoring from './components/EventMonitoring'
 import './index.css'
 
 // ===========================
@@ -443,7 +444,10 @@ export default function App() {
         selectedNode={selectedNode}
         onSelectNode={setSelectedNode}
       />
+	{/* DASHBOARD V3 - EVENT MONITORING */}
 
+	<EventMonitoring nodes={nodes} />
+	
       {/* SELECTED NODE DETAILS */}
 
       <section className="card">
