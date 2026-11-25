@@ -8,12 +8,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import fetch_all, fetch_one
 
+from .routes.monitoring import router as monitoring_router
+from .routes.maps import router as maps_router
 
 app = FastAPI(
     title="FIRE SCOUT API",
     description="Fire Monitoring and Robot Management",
     version="1.0.0"
 )
+
+app.include_router(maps_router)
+app.include_router(monitoring_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,37 +34,100 @@ app.add_middleware(
 NODE_TIMEOUT = int(
     os.getenv("NODE_TIMEOUT_SECONDS", "15")
 )
+TELEMETRY_TIMEOUT = int(
+    os.getenv("TELEMETRY_TIMEOUT_SECONDS", "8")
+)
+
+HEARTBEAT_TIMEOUT = int(
+    os.getenv("HEARTBEAT_TIMEOUT_SECONDS", "15")
+)
+
+def get_age_seconds(value):
+    if not value:
+        return None
+
+    try:
+        if isinstance(value, str):
+            value = datetime.fromisoformat(
+                value.replace("Z", "+00:00")
+            )
+
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+
+        return (
+            datetime.now(timezone.utc)
+            - value.astimezone(timezone.utc)
+        ).total_seconds()
+
+    except (ValueError, TypeError, AttributeError):
+        return None
 
 
-def calculate_status(node):
+def calculate_node_states(node):
+    telemetry_age = get_age_seconds(
+        node.get("last_seen")
+    )
 
-    if node["status"] == "offline":
-        return "offline"
+    heartbeat_age = get_age_seconds(
+        node.get("last_heartbeat_at")
+    )
 
-    last_seen = node.get("last_seen")
+    valid_ages = [
+        age
+        for age in (telemetry_age, heartbeat_age)
+        if age is not None and age >= -5
+    ]
 
-    if not last_seen:
-        return "unknown"
+    # Connectivity: use both telemetry and heartbeat
+    if node.get("status") == "offline":
+        connection_status = "offline"
 
-    if isinstance(last_seen, str):
-        last_seen = datetime.fromisoformat(
-            last_seen.replace("Z", "+00:00")
-        )
+    elif not valid_ages:
+        connection_status = "unknown"
 
-    if last_seen.tzinfo is None:
-        last_seen = last_seen.replace(
-            tzinfo=timezone.utc
-        )
+    elif min(valid_ages) <= NODE_TIMEOUT:
+        connection_status = "online"
 
-    now = datetime.now(timezone.utc)
+    else:
+        connection_status = "offline"
 
-    elapsed = (now - last_seen).total_seconds()
+    # Telemetry freshness
+    if telemetry_age is None:
+        telemetry_status = "no_data"
 
-    if elapsed > NODE_TIMEOUT:
-        return "offline"
+    elif -5 <= telemetry_age <= TELEMETRY_TIMEOUT:
+        telemetry_status = "fresh"
 
-    return "online"
+    else:
+        telemetry_status = "stale"
 
+    # Sensor health from recent heartbeat
+    sht31_ok = node.get("sht31_ok")
+
+    heartbeat_is_fresh = (
+        heartbeat_age is not None
+        and -5 <= heartbeat_age <= HEARTBEAT_TIMEOUT
+    )
+
+    if (
+        connection_status != "online"
+        or not heartbeat_is_fresh
+        or sht31_ok is None
+    ):
+        sensor_health = "unknown"
+
+    elif sht31_ok == 1:
+        sensor_health = "ok"
+
+    else:
+        sensor_health = "fault"
+
+    return {
+        "connection_status": connection_status,
+        "telemetry_status": telemetry_status,
+        "sensor_health": sensor_health,
+}
 
 def get_node_or_404(node_id):
 
@@ -75,7 +143,9 @@ def get_node_or_404(node_id):
             detail="Node not found"
         )
 
-    node["current_status"] = calculate_status(node)
+    node.update(calculate_node_states(node))
+
+    node["current_status"] = node["connection_status"]
 
     return node
 
@@ -110,7 +180,9 @@ def get_nodes():
     """)
 
     for node in nodes:
-        node["current_status"] = calculate_status(node)
+        node.update(calculate_node_states(node))
+
+        node["current_status"] = node["connection_status"]
 
     return nodes
 

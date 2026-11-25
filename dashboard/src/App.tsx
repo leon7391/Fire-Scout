@@ -13,18 +13,19 @@ import {
 
 import NodeOverview from './components/NodeOverview'
 import EventMonitoring from './components/EventMonitoring'
+import RobotMap from './components/RobotMap'
 import './index.css'
 
-// ===========================
 // TYPES
-// ===========================
-
 type NodeInfo = {
   node_id: string
   mqtt_node: string
   status: string
   current_status: string
   last_seen: string | null
+  connection_status: string
+  sensor_health: string
+  telemetry_status: string
   map_id?: string | null
   map_x?: number | null
   map_y?: number | null
@@ -53,10 +54,7 @@ type SensorKey =
   | 'humidity_pct'
   | 'mq2_raw'
 
-// ===========================
 // API FUNCTIONS
-// ===========================
-
 async function getJSON<T>(url: string): Promise<T> {
   const response = await fetch(url)
 
@@ -78,10 +76,7 @@ async function getJSON<T>(url: string): Promise<T> {
   return (await response.json()) as T
 }
 
-// ===========================
 // UTILITY FUNCTIONS
-// ===========================
-
 function formatTime(value?: string | null): string {
   if (!value) {
     return 'No data'
@@ -96,10 +91,7 @@ function formatTime(value?: string | null): string {
   return date.toLocaleString('vi-VN')
 }
 
-// ===========================
 // METRIC CARD
-// ===========================
-
 function MetricCard({
   label,
   value,
@@ -124,10 +116,7 @@ function MetricCard({
   )
 }
 
-// ===========================
 // SENSOR HISTORY CHART
-// ===========================
-
 function SensorChart({
   data,
   field,
@@ -200,10 +189,7 @@ function SensorChart({
   )
 }
 
-// ===========================
 // MAIN APP
-// ===========================
-
 export default function App() {
   const [nodes, setNodes] = useState<NodeInfo[]>([])
 
@@ -225,10 +211,7 @@ export default function App() {
   const [readingError, setReadingError] =
     useState<string>('')
 
-  // ===========================
   // FETCH ALL NODES
-  // ===========================
-
   useEffect(() => {
     let active = true
 
@@ -271,7 +254,7 @@ export default function App() {
 
     const timer = setInterval(() => {
       void loadNodes()
-    }, 5000)
+    }, 2000)
 
     return () => {
       active = false
@@ -279,10 +262,7 @@ export default function App() {
     }
   }, [])
 
-  // ===========================
   // FETCH SELECTED NODE DATA
-  // ===========================
-
   useEffect(() => {
     if (!selectedNode) {
       setLatest(null)
@@ -355,7 +335,7 @@ export default function App() {
 
     const timer = setInterval(() => {
       void loadReadings()
-    }, 5000)
+    }, 2000)
 
     return () => {
       active = false
@@ -363,9 +343,7 @@ export default function App() {
     }
   }, [selectedNode])
 
-  // ===========================
   // SELECTED NODE
-  // ===========================
 
   const currentNode = nodes.find(
     (node) => node.node_id === selectedNode
@@ -374,9 +352,7 @@ export default function App() {
   const currentStatus =
     currentNode?.current_status ?? 'unknown'
 
-  // ===========================
   // USER INTERFACE
-  // ===========================
 
   return (
     <main className="app">
@@ -397,7 +373,7 @@ export default function App() {
         </div>
 
         <span className="refresh">
-          ● Auto Refresh: 5s
+          ● Auto Refresh: 2s
         </span>
       </header>
 
@@ -444,10 +420,13 @@ export default function App() {
         selectedNode={selectedNode}
         onSelectNode={setSelectedNode}
       />
-	{/* DASHBOARD V3 - EVENT MONITORING */}
+      {/* DASHBOARD V3 - EVENT MONITORING */}
 
-	<EventMonitoring nodes={nodes} />
-	
+      <EventMonitoring nodes={nodes} />
+      {/* DASHBOARD V4 - LIDAR / SLAM MAP */}
+
+      <RobotMap nodes={nodes} />
+
       {/* SELECTED NODE DETAILS */}
 
       <section className="card">
@@ -464,11 +443,10 @@ export default function App() {
           </div>
 
           <span
-            className={`status ${
-              currentStatus === 'online'
+            className={`status ${currentStatus === 'online'
                 ? 'online'
                 : 'offline'
-            }`}
+              }`}
           >
             {currentStatus.toUpperCase()}
           </span>
@@ -513,9 +491,9 @@ export default function App() {
           {formatTime(latest?.received_at)}
         </p>
 
-        {currentStatus !== 'online' && (
+        {currentNode?.telemetry_status !== 'fresh' && (
           <p className="muted">
-            Node is not currently reporting.
+            Sensor telemetry is not fresh.
             Displayed readings may be outdated.
           </p>
         )}

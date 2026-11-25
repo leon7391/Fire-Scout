@@ -1,0 +1,142 @@
+.fs-map-panel {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.fs-map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.fs-map-status {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #123345;
+    color: #7dd3fc;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.fs-map-empty {
+    min-height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 24px;
+    border: 1px dashed #50627a;
+    border-radius: 12px;
+    background:
+        linear-gradient(90deg,
+            transparent 24px,
+            #1e2e42 25px,
+            transparent 26px),
+        linear-gradient(transparent 24px,
+            #1e2e42 25px,
+            transparent 26px);
+    background-size: 26px 26px;
+    background-color: #0d1727;
+}
+
+.fs-map-empty h3 {
+    margin: 0;
+}
+
+.fs-map-empty-icon {
+    font-size: 52px;
+    color: #38bdf8;
+}
+
+.fs-map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.fs-map-zoom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fs-map-zoom button {
+    padding: 7px 12px;
+    border: 1px solid #34445b;
+    border-radius: 7px;
+    background: #123345;
+    color: #e8edf5;
+    cursor: pointer;
+}
+
+.fs-map-zoom button:hover {
+    background: #174663;
+}
+
+.fs-map-viewport {
+    width: 100%;
+    max-height: 620px;
+    overflow: auto;
+    background: #0b1220;
+    border: 1px solid #34445b;
+    border-radius: 12px;
+}
+
+.fs-map-canvas {
+    min-width: 100%;
+}
+
+.fs-map-canvas svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.fs-map-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    padding: 15px 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.fs-map-details strong {
+    color: #e8edf5;
+}
+
+.fs-map-note,
+.fs-map-footer {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.fs-map-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #34445b;
+}
+
+@media (max-width: 650px) {
+
+    .fs-map-header,
+    .fs-map-toolbar,
+    .fs-map-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

@@ -26,3 +26,6 @@ include/mqtt_define_v2.h
 # Local environment and databases
 backend/.env
 data/*.db
+
+#map
+data/maps/
