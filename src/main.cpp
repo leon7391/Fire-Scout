@@ -34,6 +34,22 @@ uint32_t telemetrySequence = 0;
 char bootId[16] = {0};
 
 bool sht31Ready = false;
+
+// ADC average function
+const uint8_t MQ2_ADC_SAMPLES = 5;
+
+int readMQ2Average();
+
+int readMQ2Average() {
+    uint32_t sum = 0;
+
+    for (uint8_t i = 0; i < MQ2_ADC_SAMPLES; i++) {
+        sum += analogRead(MQ2_PIN);
+        delay(2);
+    }
+
+    return static_cast<int>(sum / MQ2_ADC_SAMPLES);
+}
 // WIFI CONNECTION
 void maintainWiFi() {
   if (WiFi.status() == WL_CONNECTED) {
@@ -137,7 +153,7 @@ void publishTelemetry() {
   float temperature = sht31.readTemperature();
   float humidity = sht31.readHumidity();
 
-  int mq2Raw = analogRead(MQ2_PIN);
+  int mq2Raw = readMQ2Average();
 
   if (
     !isfinite(temperature) ||
@@ -257,6 +273,7 @@ void publishHeartbeat() {
     Serial.println("[HEARTBEAT] Publish failed");
   }
 }
+
 // SETUP
 void setup() {
   Serial.begin(115200);
@@ -273,9 +290,7 @@ void setup() {
     (unsigned long)esp_random()
   );
 
-  Serial.println("============================");
   Serial.println("FIRE SCOUT ESP32 FIRMWARE V2.2");
-  Serial.println("============================");
 
   sht31Ready = sht31.begin(SHT31_ADDRESS);
 

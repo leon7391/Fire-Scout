@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react'
 import './EventMonitoring.css'
 
@@ -54,6 +53,7 @@ type Props = {
   nodes: NodeInfo[]
 }
 
+const EVENTS_PER_PAGE = 10
 const EVENT_TYPES = [
   { value: '', label: 'All Events' },
   { value: 'temperature_suspicious', label: 'Temperature Suspicious' },
@@ -124,6 +124,8 @@ export default function EventMonitoring({ nodes }: Props) {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+
+  const [currentPage, setCurrentPage] = useState(1)
 
   const eventParams = new URLSearchParams({
     hours: String(hours),
@@ -259,6 +261,19 @@ export default function EventMonitoring({ nodes }: Props) {
     (alert) =>
       !nodeFilter || alert.node_id === nodeFilter
   )
+  const totalPages = Math.max(
+  1,
+  Math.ceil(events.length / EVENTS_PER_PAGE)
+)
+
+  const safePage = Math.min(currentPage, totalPages)
+
+  const startIndex = (safePage - 1) * EVENTS_PER_PAGE
+
+  const paginatedEvents = events.slice(
+  startIndex,
+  startIndex + EVENTS_PER_PAGE
+)
 
   return (
     <section className="card fs3-monitoring">
@@ -280,7 +295,10 @@ export default function EventMonitoring({ nodes }: Props) {
           Sensor Node
           <select
             value={nodeFilter}
-            onChange={(e) => setNodeFilter(e.target.value)}
+            onChange={(e) => {
+              setNodeFilter(e.target.value)
+              setCurrentPage(1)
+            }}
           >
             <option value="">All Nodes</option>
 
@@ -453,7 +471,7 @@ export default function EventMonitoring({ nodes }: Props) {
           </thead>
 
           <tbody>
-            {events.map((event) => (
+            {paginatedEvents.map((event) =>  (
               <tr key={event.id}>
                 <td>{formatTime(event.created_at)}</td>
                 <td>{event.node_id}</td>
@@ -500,6 +518,44 @@ export default function EventMonitoring({ nodes }: Props) {
             No events found for the selected filters.
           </p>
         )}
+      </div>
+
+      <div className="fs3-pagination">
+        <span className="fs3-page-info">
+          Showing {events.length === 0 ? 0 : startIndex + 1}
+          {' - '}
+          {Math.min(startIndex + EVENTS_PER_PAGE, events.length)}
+          {' of '}
+          {events.length} events
+        </span>
+
+        <div className="fs3-page-controls">
+          <button
+            type="button"
+            disabled={safePage === 1}
+            onClick={() => {
+              setCurrentPage(safePage - 1)
+              setSelectedEventId(null)
+            }}
+          >
+            Previous
+          </button>
+
+          <span>
+            Page {safePage} of {totalPages}
+          </span>
+
+          <button
+            type="button"
+            disabled={safePage >= totalPages}
+            onClick={() => {
+              setCurrentPage(safePage + 1)
+              setSelectedEventId(null)
+            }}
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {selectedEventId !== null && (

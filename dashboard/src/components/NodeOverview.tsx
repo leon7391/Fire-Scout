@@ -7,6 +7,9 @@ type NodeInfo = {
   mqtt_node: string
   current_status: string
   last_seen: string | null
+  connection_status: string
+  sensor_health: string
+  telemetry_status: string
   map_id?: string | null
   map_x?: number | null
   map_y?: number | null
@@ -51,18 +54,36 @@ function getWarnings(
   mq2Limit: number
 ): string[] {
   const warnings: string[] = []
-  const status = getStatus(node.current_status)
+  const connection = node.connection_status
 
-  if (status === 'offline') {
-    warnings.push('Không nhận được dữ liệu mới từ node')
+  if (connection === 'offline') {
+    warnings.push('ESP32 mất kết nối hoặc hết thời gian chờ')
   }
 
-  if (status === 'unknown') {
-    warnings.push('Chưa xác định được trạng thái node')
+  if (connection === 'unknown') {
+    warnings.push('Chưa xác định được kết nối ESP32')
   }
 
-  // Only evaluate current telemetry from online nodes.
-  if (status === 'online' && reading) {
+  if (connection === 'online') {
+    if (node.sensor_health === 'fault') {
+      warnings.push('SHT31 đang gặp lỗi')
+    }
+
+    if (node.telemetry_status === 'stale') {
+      warnings.push('Dữ liệu cảm biến đã cũ')
+    }
+
+    if (node.telemetry_status === 'no_data') {
+      warnings.push('Chưa có dữ liệu cảm biến')
+    }
+  }
+
+  // Only use fresh telemetry for UI threshold warnings
+  if (
+    connection === 'online' &&
+    node.telemetry_status === 'fresh' &&
+    reading
+  ) {
     if (reading.temperature_c >= tempLimit) {
       warnings.push(
         `Nhiệt độ vượt ngưỡng thử nghiệm ${tempLimit}°C`
@@ -76,12 +97,9 @@ function getWarnings(
     }
   }
 
-  if (status === 'online' && !reading) {
-    warnings.push('Chưa có dữ liệu cảm biến')
-  }
-
   return warnings
 }
+
 
 export default function NodeOverview({
   nodes,
@@ -282,6 +300,17 @@ export default function NodeOverview({
 
               <p className="fs-node-subtitle">
                 Last seen: {formatTime(node.last_seen)}
+              </p>
+              <p className="fs-node-subtitle">
+                Connection: {node.connection_status.toUpperCase()}
+              </p>
+
+              <p className="fs-node-subtitle">
+                SHT31: {node.sensor_health.toUpperCase()}
+              </p>
+
+              <p className="fs-node-subtitle">
+                Telemetry: {node.telemetry_status.toUpperCase()}
               </p>
 
               <div className="fs-metrics">

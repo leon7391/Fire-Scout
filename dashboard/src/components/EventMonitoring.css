@@ -261,3 +261,54 @@
   }
 }
 
+/* Event History Pagination */
+
+.fs3-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 12px 0;
+  border-top: 1px solid #34445b;
+}
+
+.fs3-page-info {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.fs3-page-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.fs3-page-controls button {
+  padding: 9px 15px;
+  background: #123345;
+  border: 1px solid #256585;
+  border-radius: 8px;
+  color: #7dd3fc;
+  cursor: pointer;
+}
+
+.fs3-page-controls button:hover:not(:disabled) {
+  background: #174663;
+}
+
+.fs3-page-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .fs3-pagination {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+

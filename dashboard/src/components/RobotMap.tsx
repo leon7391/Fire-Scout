@@ -202,7 +202,7 @@ export default function RobotMap({ nodes }: Props) {
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setZoom((v) => Math.max(100, v - 25))
+                                    setZoom((v) => Math.max(25, v - 25))
                                 }
                             >
                                 −
@@ -213,7 +213,7 @@ export default function RobotMap({ nodes }: Props) {
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setZoom((v) => Math.min(250, v + 25))
+                                    setZoom((v) => Math.min(300, v + 25))
                                 }
                             >
                                 +
