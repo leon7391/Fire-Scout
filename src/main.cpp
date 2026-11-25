@@ -5,27 +5,15 @@
 #include <MQTT.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_SHT31.h>
-#include <mqtt_define_v2.h>
+#include <node_config.h>
 
 #define SHT31_ADDRESS 0x44
 #define SDA_PIN 21
 #define SCL_PIN 22
 #define MQ2_PIN 36
 
-#define MQTT_CLIENT_ID "firescout-node-01"
-#define NODE_ID "firescout_node_01"
-
-#define MQTT_TELEMETRY_TOPIC \
-  "firescout/nodes/node01/telemetry"
-
-#define MQTT_STATUS_TOPIC \
-  "firescout/nodes/node01/status"
-
-#define MQTT_HEARTBEAT_TOPIC \
-  "firescout/nodes/node01/heartbeat"
-
 const unsigned long SENSOR_INTERVAL = 2000;
-const unsigned long HEARTBEAT_INTERVAL = 5000;
+const unsigned long HEARTBEAT_INTERVAL = 2000;
 const unsigned long WIFI_RETRY_INTERVAL = 10000;
 const unsigned long MQTT_RETRY_INTERVAL = 5000;
 const unsigned long SENSOR_RETRY_INTERVAL = 10000;
@@ -46,11 +34,7 @@ uint32_t telemetrySequence = 0;
 char bootId[16] = {0};
 
 bool sht31Ready = false;
-
-// =====================================
 // WIFI CONNECTION
-// =====================================
-
 void maintainWiFi() {
   if (WiFi.status() == WL_CONNECTED) {
     return;
@@ -67,11 +51,7 @@ void maintainWiFi() {
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   }
 }
-
-// =====================================
 // MQTT CONNECTION
-// =====================================
-
 void maintainMQTT() {
   if (WiFi.status() != WL_CONNECTED) {
     return;
@@ -125,11 +105,7 @@ void maintainMQTT() {
     );
   }
 }
-
-// =====================================
 // SHT31 SENSOR HEALTH
-// =====================================
-
 void maintainSHT31() {
   if (sht31Ready) {
     return;
@@ -151,11 +127,7 @@ void maintainSHT31() {
     }
   }
 }
-
-// =====================================
 // READ AND PUBLISH TELEMETRY
-// =====================================
-
 void publishTelemetry() {
   if (!sht31Ready) {
     Serial.println("[SENSOR] SHT31 unavailable");
@@ -242,11 +214,7 @@ void publishTelemetry() {
     Serial.println("[TELEMETRY] Publish failed");
   }
 }
-
-// =====================================
 // HEARTBEAT
-// =====================================
-
 void publishHeartbeat() {
   if (!mqtt.connected()) {
     return;
@@ -289,11 +257,7 @@ void publishHeartbeat() {
     Serial.println("[HEARTBEAT] Publish failed");
   }
 }
-
-// =====================================
 // SETUP
-// =====================================
-
 void setup() {
   Serial.begin(115200);
 
@@ -340,11 +304,7 @@ void setup() {
 
   Serial.println("[SYSTEM] Setup complete");
 }
-
-// =====================================
 // MAIN LOOP
-// =====================================
-
 void loop() {
   maintainWiFi();
   maintainMQTT();

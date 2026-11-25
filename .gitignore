@@ -7,6 +7,7 @@
 #Python
 .venv/
 _pycache_/
+*.pyc
 
 #Database generated files
 data/*.db
@@ -17,3 +18,11 @@ data/*.db-wal
 backend/.env
 /include/mqtt_define.h
 /include/mqtt_define_v2.h
+
+# FIRE SCOUT private configuration
+include/node_config.h
+include/mqtt_define_v2.h
+
+# Local environment and databases
+backend/.env
+data/*.db
